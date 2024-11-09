@@ -6,7 +6,7 @@ import time
 from timeloop import Timeloop
 from datetime import timedelta
 
-smartmeter = minimalmodbus.Instrument('/dev/ttyUSB2', 1)  # port name, slave address (in decimal)
+smartmeter = minimalmodbus.Instrument('/dev/ttyUSB0', 1)  # port name, slave address (in decimal)
 smartmeter.serial.baudrate = 9600          # Baud
 smartmeter.serial.bytesize = 8
 smartmeter.serial.parity = serial.PARITY_NONE  # vendor default is EVEN
@@ -35,32 +35,28 @@ def sample_job_every_10s():
         Voltage = smartmeter.read_long(0x0100, 3, signed=True) / 1000
         print(f"Voltage: {Voltage} V")
 
-        print("Reading Voltage...")
-        Voltage = smartmeter.read_register(256, 2, 3, True)
-        print(f"Voltage: {Voltage} V")
-
         print("Reading Current...")
-        Current = smartmeter.read_long(313, 3, False, 0) / 1000
+        Current = smartmeter.read_long(0x102, 3, signed=True) / 1000
         print(f"Current: {Current} A")
 
         print("Reading ActivePower...")
-        ActivePower = smartmeter.read_long(260, 3, False, 0)
+        ActivePower = smartmeter.read_long(0x104, 3, signed=True)  / 1
         print(f"ActivePower: {ActivePower} W")
 
         print("Reading ReactivePower...")
-        ReactivePower = smartmeter.read_long(328, 3, False, 0)
+        ReactivePower = smartmeter.read_long(0x108, 3, signed=True) / 1
         print(f"ReactivePower: {ReactivePower} Var")
 
         print("Reading ApparentPower...")
-        ApparentPower = smartmeter.read_long(336, 3, False, 0)
+        ApparentPower = smartmeter.read_long(0x106, 3, signed=True) / 1
         print(f"ApparentPower: {ApparentPower} VA")
 
         print("Reading PowerFactor...")
-        PowerFactor = smartmeter.read_register(344, 3, 3, True)
+        PowerFactor = smartmeter.read_register(0x10B, 3, 3, True) 
         print(f"PowerFactor: {PowerFactor}")
 
         print("Reading ActiveEnergy...")
-        PowerFactor = smartmeter.read_register(270, 3, 3, True)
+        PowerFactor = smartmeter.read_long(0x10E, 3, True) / 100
         print(f"ActiveEnergy: {PowerFactor}")
 
         print("Reading ActiveEnergy...")
