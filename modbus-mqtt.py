@@ -3,7 +3,7 @@ import io
 import minimalmodbus
 import struct
 import serial
-import paho.mqtt as mqttClient
+# import paho.mqtt as mqttClient
 import time
 from timeloop import Timeloop
 from datetime import timedelta
