@@ -3,7 +3,7 @@ import io
 import minimalmodbus
 import struct
 import serial
-import paho.mqtt.client as mqttClient
+import paho.mqtt as mqttClient
 import time
 from timeloop import Timeloop
 from datetime import timedelta
@@ -28,39 +28,39 @@ tl = Timeloop()
 @tl.job(interval=timedelta(seconds=10))
 def sample_job_every_10s():
     value = "{}".format(time.ctime()) #create timestamp
-    client.publish("home/energy/solar/datetime",value) # publish timestamp
+    # client.publish("home/energy/solar/datetime",value) # publish timestamp
     f = open("/sys/class/thermal/thermal_zone0/temp", "r") # read Raspberry Pi CPU temperature
     t = f.readline ()
     t = float(t)/1000   # convert value
-    client.publish("home/energy/solar/RaspPiCpuTemp",t) # publish cpu temperature in degree celsius
+    # client.publish("home/energy/solar/RaspPiCpuTemp",t) # publish cpu temperature in degree celsius
     try:
         Frequency = smartmeter.read_register(304, 2, 3, True)  # registeraddress, number_of_decimals=0, functioncode=3, signed=False
-        client.publish("home/energy/solar/Frequency",Frequency) # publish Frequency in Hz
+        # client.publish("home/energy/solar/Frequency",Frequency) # publish Frequency in Hz
         Voltage = smartmeter.read_register(305, 2, 3, True)
-        client.publish("home/energy/solar/Voltage",Voltage) # publish Voltage in V
+        # client.publish("home/energy/solar/Voltage",Voltage) # publish Voltage in V
         Current = smartmeter.read_long(313, 3, False, 0) #registeraddress, functioncode=3, signed=False, byteorder=0) in mA
         Current = Current/1000
-        client.publish("home/energy/solar/Current",Current) # publish Current in A
+        # client.publish("home/energy/solar/Current",Current) # publish Current in A
         ActivePower = smartmeter.read_long(320, 3, False, 0) #registeraddress, functioncode=3, signed=False, byteorder=0)
-        client.publish("home/energy/solar/ActivePower",ActivePower) # publish ActivePower in W
+        # client.publish("home/energy/solar/ActivePower",ActivePower) # publish ActivePower in W
         ReactivePower =  smartmeter.read_long(328, 3, False, 0) #registeraddress, functioncode=3, signed=False, byteorder=0)
-        client.publish("home/energy/solar/ReactivePower",ReactivePower) # publish ReactivePower in Var
+        # client.publish("home/energy/solar/ReactivePower",ReactivePower) # publish ReactivePower in Var
         ApparentPower = smartmeter.read_long(336, 3, False, 0) #registeraddress, functioncode=3, signed=False, byteorder=0)
-        client.publish("home/energy/solar/ApparentPower",ApparentPower) # publish ApparentPower in VA
+        # client.publish("home/energy/solar/ApparentPower",ApparentPower) # publish ApparentPower in VA
         PowerFactor = smartmeter.read_register(344, 3, 3, True)
-        client.publish("home/energy/solar/PowerFactor",PowerFactor) # publish PowerFactor
+        # client.publish("home/energy/solar/PowerFactor",PowerFactor) # publish PowerFactor
         ActiveEnergy = smartmeter.read_registers(40960, 10, 3) #read_registers(registeraddress, number_of_registers, functioncode=3)
         bits = (ActiveEnergy[0] << 16) + ActiveEnergy[1] # combining Total Energy valuepair
         s = struct.pack('>i', bits) # write to string an interpret as int
         tmp = struct.unpack('>L', s)[0] # extract from string and interpret as unsigned long
         tmpFloat1 = tmp/100 # needs to be converted
-        client.publish("home/energy/solar/ActiveEnergy",float(tmpFloat1)) # publish ActiveEnergy in kWh
+        # client.publish("home/energy/solar/ActiveEnergy",float(tmpFloat1)) # publish ActiveEnergy in kWh
         ReactiveEnergy = smartmeter.read_registers(40990, 10, 3) #read_registers(registeraddress, number_of_registers, functioncode=3)
         bits = (ReactiveEnergy[0] << 16) + ReactiveEnergy[1] # combining Total Energy valuepair
         s = struct.pack('>i', bits) # write to string an interpret as int
         tmp = struct.unpack('>L', s)[0] # extract from string and interpret as unsigned long
         tmpFloat2 = tmp/100 # needs to be converted
-        client.publish("home/energy/solar/ReactiveEnergy",float(tmpFloat2)) # publish ReactiveEnergy in kvarh
+        # client.publish("home/energy/solar/ReactiveEnergy",float(tmpFloat2)) # publish ReactiveEnergy in kvarh
         if smartmeter.debug == True:
             FrequencyTxt = "Die Frequenz ist: %.2f Herz" % Frequency
             print (FrequencyTxt)
@@ -83,10 +83,10 @@ def sample_job_every_10s():
             ReactiveEnergyTxt = "Zählerstand Blindenergie ist: %.1f kvarh" % tmpFloat2
             print (ReactiveEnergyTxt)            
         errorcode = "OK"
-        client.publish("home/energy/solar/ModbusStatus",errorcode) # publish error status Modbus connection
+        # client.publish("home/energy/solar/ModbusStatus",errorcode) # publish error status Modbus connection
     except:
         errorcode = "Modbus error. No connection to device"
-        client.publish("home/energy/solar/ModbusStatus",errorcode) # publish error status Modbus connection
+        # client.publish("home/energy/solar/ModbusStatus",errorcode) # publish error status Modbus connection
         return
 
 def on_connect(client, userdata, flags, rc):
@@ -96,14 +96,14 @@ def on_connect(client, userdata, flags, rc):
         Connected = True                #Signal connection
     else:
         print("Connection failed")
-client = mqttClient.Client("modbus-mqtt@raspberrypi")   #create new instance
-client.username_pw_set(user, password=password)    #set username and password
-client.on_connect= on_connect                      #attach function to callback
-client.connect(broker_address, port=port)          #connect to broker
-client.loop_start()        #start the loop
+# client = mqttClient.Client("modbus-mqtt@raspberrypi")   #create new instance
+# client.username_pw_set(user, password=password)    #set username and password
+# client.on_connect= on_connect                      #attach function to callback
+# client.connect(broker_address, port=port)          #connect to broker
+# client.loop_start()        #start the loop
 while Connected != True:    #Wait for connection
     time.sleep(0.1)
 if __name__ == "__main__":  #main loop
     tl.start(block=True)
-client.disconnect()
-client.loop_stop()
+# client.disconnect()
+# client.loop_stop()
