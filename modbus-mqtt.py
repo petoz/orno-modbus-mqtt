@@ -23,11 +23,11 @@ def sample_job_every_10s():
     print("Starting data collection...")
     try:
         print("Reading Frequency...")
-        Frequency = smartmeter.read_register(304, 2, 3, True)
+        Frequency = smartmeter.read_register(266, 2, 3, True)
         print(f"Frequency: {Frequency} Hz")
 
         print("Reading Voltage...")
-        Voltage = smartmeter.read_register(305, 2, 3, True)
+        Voltage = smartmeter.read_register(256, 2, 3, True)
         print(f"Voltage: {Voltage} V")
 
         print("Reading Current...")
@@ -51,7 +51,7 @@ def sample_job_every_10s():
         print(f"PowerFactor: {PowerFactor}")
 
         print("Reading ActiveEnergy...")
-        ActiveEnergy = smartmeter.read_registers(40960, 10, 3)
+        ActiveEnergy = smartmeter.read_registers(288, 10, 3)
         bits = (ActiveEnergy[0] << 16) + ActiveEnergy[1]
         s = struct.pack('>i', bits)
         tmp = struct.unpack('>L', s)[0]
