@@ -44,7 +44,7 @@ def sample_job_every_10s():
         print(f"Current: {Current} A")
 
         print("Reading ActivePower...")
-        ActivePower = smartmeter.read_long(320, 3, False, 0)
+        ActivePower = smartmeter.read_long(260, 3, False, 0)
         print(f"ActivePower: {ActivePower} W")
 
         print("Reading ReactivePower...")
