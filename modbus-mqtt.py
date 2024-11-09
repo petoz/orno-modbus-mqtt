@@ -60,6 +60,10 @@ def sample_job_every_10s():
         print(f"PowerFactor: {PowerFactor}")
 
         print("Reading ActiveEnergy...")
+        PowerFactor = smartmeter.read_register(270, 3, 3, True)
+        print(f"ActiveEnergy: {PowerFactor}")
+
+        print("Reading ActiveEnergy...")
         ActiveEnergy = smartmeter.read_registers(288, 10, 3)
         bits = (ActiveEnergy[0] << 16) + ActiveEnergy[1]
         s = struct.pack('>i', bits)
