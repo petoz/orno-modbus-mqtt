@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import io
 import minimalmodbus
 import struct
 import serial
@@ -20,13 +19,8 @@ smartmeter.debug = False                    # set to "True" for debug mode
 tl = Timeloop()
 @tl.job(interval=timedelta(seconds=10))
 def sample_job_every_10s():
-    value = "{}".format(time.ctime())  # create timestamp
-    f = open("/sys/class/thermal/thermal_zone0/temp", "r")  # read Raspberry Pi CPU temperature
-    t = f.readline()
-    t = float(t) / 1000                # convert value
-
     try:
-        Frequency = smartmeter.read_register(304, 2, 3, True)  # registeraddress, number_of_decimals=0, functioncode=3, signed=False
+        Frequency = smartmeter.read_register(304, 2, 3, True)
         Voltage = smartmeter.read_register(305, 2, 3, True)
         Current = smartmeter.read_long(313, 3, False, 0) / 1000
         ActivePower = smartmeter.read_long(320, 3, False, 0)
