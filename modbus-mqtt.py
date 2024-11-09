@@ -48,7 +48,7 @@ def sample_job_every_10s():
         print(f"ApparentPower: {ApparentPower} VA")
 
         print("Reading PowerFactor...")
-        PowerFactor = smartmeter.read_register(0x10B, 3, 3, True) 
+        PowerFactor = smartmeter.read_register(0x10B, 3, 3, signed=True) / 1
         print(f"PowerFactor: {PowerFactor}")
 
         print("Reading ActiveEnergy...")
