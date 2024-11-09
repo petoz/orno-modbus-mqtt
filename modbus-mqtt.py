@@ -22,8 +22,13 @@ tl = Timeloop()
 def sample_job_every_10s():
     print("Starting data collection...")
     try:
+        # Read the frequency from register 0x010A with one decimal place adjustment
         print("Reading Frequency...")
-        Frequency = smartmeter.read_register(266, 2, 3, True)
+        Frequency = smartmeter.read_register(0x010A, 1, 3, signed=True) / 10
+        print(f"Frequency: {Frequency} Hz")
+
+        print("Reading Frequency...")
+        Frequency = smartmeter.read_register(0x10A, 2, 3, True)
         print(f"Frequency: {Frequency} Hz")
 
         print("Reading Voltage...")
