@@ -24,7 +24,7 @@ def sample_job_every_10s():
     try:
         # Read the frequency from register 0x010A with one decimal place adjustment
         print("Reading Frequency...")
-        Frequency = smartmeter.read_register(0x010A, 1, 3, signed=True) / 10
+        Frequency = smartmeter.read_register(0x010A, 1, 3, signed=True) / 1
         print(f"Frequency: {Frequency} Hz")
 
         print("Reading Frequency...")
