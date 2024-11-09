@@ -27,10 +27,6 @@ def sample_job_every_10s():
         Frequency = smartmeter.read_register(0x010A, 1, 3, signed=True) / 1
         print(f"Frequency: {Frequency} Hz")
 
-        print("Reading Frequency...")
-        Frequency = smartmeter.read_register(266, 1, 3, True)
-        print(f"Frequency: {Frequency} Hz")
-
         # Read the voltage from register 0x0100, using two registers (32 bits)
         Voltage = smartmeter.read_long(0x0100, 3, signed=True) / 1000
         print(f"Voltage: {Voltage} V")
@@ -56,24 +52,12 @@ def sample_job_every_10s():
         print(f"PowerFactor: {PowerFactor}")
 
         print("Reading ActiveEnergy...")
-        PowerFactor = smartmeter.read_long(0x10E, 3, True) / 100
-        print(f"ActiveEnergy: {PowerFactor}")
-
-        print("Reading ActiveEnergy...")
-        ActiveEnergy = smartmeter.read_registers(288, 10, 3)
-        bits = (ActiveEnergy[0] << 16) + ActiveEnergy[1]
-        s = struct.pack('>i', bits)
-        tmp = struct.unpack('>L', s)[0]
-        tmpFloat1 = tmp / 100
-        print(f"ActiveEnergy: {tmpFloat1} kWh")
+        ActiveEnergy = smartmeter.read_long(0x10E, 3, True) / 100
+        print(f"ActiveEnergy: {ActiveEnergy} kWh")
 
         print("Reading ReactiveEnergy...")
-        ReactiveEnergy = smartmeter.read_registers(40990, 10, 3)
-        bits = (ReactiveEnergy[0] << 16) + ReactiveEnergy[1]
-        s = struct.pack('>i', bits)
-        tmp = struct.unpack('>L', s)[0]
-        tmpFloat2 = tmp / 100
-        print(f"ReactiveEnergy: {tmpFloat2} kvarh")
+        ReactiveEnergy = smartmeter.read_long(0x118, 3, True) / 100
+        print(f"ReactiveEnergy: {ReactiveEnergy} kvarh")
 
         errorcode = "OK"
         print(f"Data collection completed successfully: {errorcode}")
