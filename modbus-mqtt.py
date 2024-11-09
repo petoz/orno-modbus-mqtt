@@ -28,7 +28,7 @@ def sample_job_every_10s():
         print(f"Frequency: {Frequency} Hz")
 
         print("Reading Frequency...")
-        Frequency = smartmeter.read_register(0x10A, 2, 3, True)
+        Frequency = smartmeter.read_register(266, 1, 3, True)
         print(f"Frequency: {Frequency} Hz")
 
         # Read the voltage from register 0x0100, using two registers (32 bits)
