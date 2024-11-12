@@ -56,7 +56,7 @@ def sample_job_every_10s():
         print(f"ActiveEnergy: {ActiveEnergy} kWh")
 
         print("Reading ReactiveEnergy...")
-        ReactiveEnergy = smartmeter.read_long(0x118, 3, True) / 100
+        ReactiveEnergy = smartmeter.read_long(0x140, 3, True) / 100
         print(f"ReactiveEnergy: {ReactiveEnergy} kvarh")
 
         errorcode = "OK"
